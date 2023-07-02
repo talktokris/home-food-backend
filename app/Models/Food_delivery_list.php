@@ -11,6 +11,7 @@ class Food_delivery_list extends Model
 
     protected $fillable = [
         'sales_id',
+        'address_id',
         'fetch_status',
         'fetch_date_time',
         'deliver_status',

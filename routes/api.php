@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\FoodMenuController;
 use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\CustomerController;
+use App\Http\Controllers\Api\OrderController;
 
 
 
@@ -71,6 +72,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/client-profile-update', [CustomerController::class,'profileUpdate'])->name('client-profile-update');
     Route::post('/client-change-password', [CustomerController::class,'passwordChange'])->name('client-change-password');
     Route::post('/client-set-search-radius', [CustomerController::class,'radiusUpdate'])->name('client-set-search-radius');
+
+    Route::post('/client-order-store', [OrderController::class,'clientStore'])->name('client-order-store');
+    Route::post('/client-order-pending', [OrderController::class,'clientPending'])->name('client-order-panding');
+    Route::post('/client-order-histroy', [OrderController::class,'clientOrderHistory'])->name('client-order-history');
 
 
 

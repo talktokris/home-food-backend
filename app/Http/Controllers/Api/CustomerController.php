@@ -15,24 +15,50 @@ class CustomerController extends Controller
 
         $user_id = auth('sanctum')->user()->id;
 
-        $validator = Validator::make($request->all(), [
-            'first_name' => 'required|string|min:2|max:200',
-            'last_name' => 'required|string|min:2|max:200',
-            'email' => 'required|email|unique:users',
-            
-            ]);
+        $data= $request->all();
+        $email_address= $data['email'];
+
+        $countEmail = User::where('email', $email_address)->get()->count();
+
+        if($countEmail===0){
+
+
+            $validator = Validator::make($request->all(), [
+                'first_name' => 'required|string|min:2|max:200',
+                'last_name' => 'required|string|min:2|max:200',
+                'email' => 'required|email|unique:users',
+                
+                ]);
 
                 if($validator->fails()){
                     return $this->sendError('Validation Error.', $validator->errors());       
                 }
 
-            $data= $request->all();
 
             $updateItem = User::where('id', '=',$user_id)->update(['first_name'=> $data['first_name'],'last_name'=> $data['last_name'],
             'email'=> $data['email']]);
+
+          //  return $updateItem;
+
+            }else {
+
+                $validator = Validator::make($request->all(), [
+                    'first_name' => 'required|string|min:2|max:200',
+                    'last_name' => 'required|string|min:2|max:200',
+                    
+                    ]);
+    
+                    if($validator->fails()){
+                        return $this->sendError('Validation Error.', $validator->errors());       
+                    }
+    
+    
+                $updateItem = User::where('id', '=',$user_id)->update(['first_name'=> $data['first_name'],'last_name'=> $data['last_name']]);
+
+            }
         
             if(!$updateItem){   $success=false;   $get_id = 1; $message='Unknown Error, Plz Contact support'; }
-            else{   $success=true; $get_id = $data['id']; $message='Profile updated successfully'; }
+            else{   $success=true; $get_id = $user_id; $message='Profile updated successfully'; }
 
             $response = [
                 'success' => $success,
@@ -45,7 +71,7 @@ class CustomerController extends Controller
 
 
         
-        public function passwordChange(Request $request){
+    public function passwordChange(Request $request){
 
 
                 $user_id = auth('sanctum')->user()->id;
@@ -65,7 +91,7 @@ class CustomerController extends Controller
                 $updateItem = User::where('id', '=',$user_id)->update(['password'=> bcrypt($data['password'])]);
             
                 if(!$updateItem){   $success=false;   $get_id = 1; $message='Unknown Error, Plz Contact support'; }
-                else{   $success=true; $get_id = $data['id']; $message='Password change successfully'; }
+                else{   $success=true; $get_id = $user_id; $message='Password change successfully'; }
     
                 $response = [
                     'success' => $success,
@@ -76,7 +102,7 @@ class CustomerController extends Controller
     
     
             
-        }
+    }
 
         public function radiusUpdate(Request $request){
 

@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CountryResource extends JsonResource
+class MenuImageResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,12 +14,13 @@ class CountryResource extends JsonResource
      */
     public function toArray($request)
     {
-       // return parent::toArray($request);
+      //  return parent::toArray($request);
 
-        return [
-            'id'=>$this->id,
-            'name'=>$this->lebel,
-            'zip_code'=>$this->zip_code,
-           ];
+      return [
+        'id' => $this->id,
+        'food_menu_id' => $this->food_menu_id,
+        'image_name' => $this->image_name,
+  
+    ];
     }
 }

@@ -24,5 +24,11 @@ class Food_menu_image extends Model
 
     }
 
+    public function getMenuInfo(){
+
+        return $this->belongsTo(Food_menu::class, 'id', 'food_menu_id');
+
+    }
+
 
 }

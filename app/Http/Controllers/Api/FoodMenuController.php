@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Food_menu;
 use App\Models\Food_menu_image;
+use App\Models\Home_page_slide;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use Intervention\Image\Facades\Image;
@@ -352,9 +353,10 @@ use App\Http\Resources\FoodMenuResource;
         $user_id = auth('sanctum')->user()->id;
         $menuData= Food_menu::where('active_status', '=', 1)->orderBy('id', 'DESC')->limit(5)->get();
         // 'results' => UserProfileResource::collection($user_info)
-
+        $homeSlides = Home_page_slide::where('status','=',1)->get();
         $response = [
             'success' => true,
+            'slides'=>$homeSlides,
             'results' => FoodMenuResource::collection($menuData),
         ];
         return response()->json($response, 200);

@@ -20,12 +20,15 @@ class UserProfileResource extends JsonResource
        return [
         'id' => $this->id,
         'name' => $this->name,
+        'first_name' => $this->first_name,
+        'last_name' => $this->last_name,
         'email'=>$this->email,
+        'mobile_no' => $this->mobile_no,
         'device_name'=>$this->device_name,
         'app_margin_per'=>$this->app_margin_per,
         'role'=> new RoleResource($this->role),
         'country'=> new  CountryResource($this->country),
-        'default_address'=> new  UserAddressResource($this->address),
+        'default_address'=> $this->address,
       //  'address_list'=> new UserAddressResource($this->address_list->user_id)
       
              'address_list'=> $this->address_list,
