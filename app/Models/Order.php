@@ -24,6 +24,7 @@ class Order extends Model
         'total_customer_amount',
         'order_status',
         'pickup_address_id',
+        'delivery_address_id',
         'payment_type',
         'payment_status',
         'payment_id',
@@ -45,6 +46,13 @@ class Order extends Model
 
     public function menu(){
         return $this->hasOne(Food_menu::class, 'id', 'menu_id');
+    }
+    public function delivery(){
+        return $this->hasOne(User_address_list::class, 'id', 'delivery_address_id');
+    }
+
+    public function pick_up(){
+        return $this->hasOne(User_address_list::class, 'id', 'pickup_address_id');
     }
     /*
     public function default_image(){

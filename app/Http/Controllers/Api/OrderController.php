@@ -11,7 +11,7 @@ use App\Models\Food_delivery_list;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Models\User;
-use App\Http\Resources\CustomerPendingOrderResource;
+use App\Http\Resources\VenderOrderStatusResource;
 
 
 
@@ -134,6 +134,7 @@ class OrderController extends Controller
                 $saveItem->total_customer_amount= $total_customer_amount;
                 $saveItem->order_status= 1;
                 $saveItem->pickup_address_id=$venderAddress;
+                $saveItem->delivery_address_id=$address_id;
                 $saveItem->payment_type= $payment_type;
                 $saveItem->payment_status= 1;
                 $saveItem->payment_id= 0;
@@ -188,46 +189,166 @@ class OrderController extends Controller
     }
 
    
-
   
     public function clientPending(Request $request){
 
-    $user_id = auth('sanctum')->user()->id;
-    $user_id=25;
+        $user_id = auth('sanctum')->user()->id;
+       // $user_id=25;
 
-    //return $user_id;
-    $orderData= Order::where('user_id','=',$user_id)->where('order_status','!=',6)->with('menu.default_image')->with('vender')->get();
+        //return $user_id;
+        $orderData= Order::where('user_id','=',$user_id)->where('order_status','!=',6)->with('menu.default_image')->with('vender')->get();
 
-    if(!$orderData){   $success=false;   $get_id = 1; $message='Unknown Error, Plz Contact support'; }
-    else{   $success=true; $get_id = $user_id; $message='Item updated successfully'; }
-    if(count($orderData)>=1){ $success=true; $message='Here is your pending orders';}else{ $success=false; $message='No ordres found';}
-    $response = [
-        'success' => $success,
-        'data'    => CustomerPendingOrderResource::collection($orderData),
-        'message' => $message,
-    ];
-    return response()->json($response, 200);
-   }
-
-   public function clientOrderHistory(Request $request){
-    
-   }
-
-   public function venderChangeStatus(Request $request){
-    
-   }
-
-
-   public function sendError($error, $errorMessages = [], $code = 404) {
-    $response = [
-        'success' => false,
-        'message' => $error,
-    ];
-
-    if(!empty($errorMessages)){
-        $response['data'] = $errorMessages;
+        if(!$orderData){   $success=false;   $get_id = 1; $message='Unknown Error, Plz Contact support'; }
+        else{   $success=true; $get_id = $user_id; $message='Item updated successfully'; }
+        if(count($orderData)>=1){ $success=true; $message='Here is your pending orders';}else{ $success=false; $message='No ordres found';}
+        $response = [
+            'success' => $success,
+            'data'    => CustomerPendingOrderResource::collection($orderData),
+            'message' => $message,
+        ];
+        return response()->json($response, 200);
     }
 
-    return response()->json($response, $code);
-}
+    public function venderOrdersStatus(Request $request){
+
+        $user_id = auth('sanctum')->user()->id;
+      //  $user_id=23;
+
+        //return $user_id;
+
+
+        $validator = Validator::make($request->all(), [
+            'order_status' => 'required|integer|min:0|max:10',
+            
+            ]);
+
+            if($validator->fails()){
+                return $this->sendError('Validation Error.', $validator->errors());       
+            }
+
+        $data= $request->all();
+        $order_status= $data['order_status'];
+
+        //return $user_id;
+        $orderData= Order::where('vender_id','=',$user_id)->where('order_status','=',$order_status)->with('menu.default_image')->with('delivery')->with('user')->get();
+
+
+        if(!$orderData){   $success=false;   $get_id = 1; $message='Unknown Error, Plz Contact support'; }
+        else{   $success=true; $get_id = $user_id; $message='Order searched successfully'; }
+        if(count($orderData)>=1){ $success=true; $message='Here is your orders';}else{ $success=false; $message='No ordres found';}
+        $response = [
+            'success' => $success,
+            'data'    => VenderOrderStatusResource::collection($orderData),
+            'message' => $message,
+        ];
+        return response()->json($response, 200);
+    }
+
+    public function venderOrdersRunning(Request $request){
+
+        $user_id = auth('sanctum')->user()->id;
+      //  $user_id=23;
+
+        //return $user_id;
+
+
+
+        $data= $request->all();
+    
+
+        //return $user_id;
+       // $orderData= Order::where('vender_id','=',$user_id)->where('order_status','=',$order_status)->with('menu.default_image')->with('delivery')->with('user')->get();
+        $orderData= Order::where('vender_id','=',$user_id)->where(function ($query) {
+            $query->where('order_status', '=', 2)
+                  ->orWhere('order_status', '=', 3);
+        })->with('menu.default_image')->with('delivery')->with('user')->get();
+
+        if(!$orderData){   $success=false;   $get_id = 1; $message='Unknown Error, Plz Contact support'; }
+        else{   $success=true; $get_id = $user_id; $message='Order searched successfully'; }
+        if(count($orderData)>=1){ $success=true; $message='Here is your orders';}else{ $success=false; $message='No ordres found';}
+        $response = [
+            'success' => $success,
+            'data'    => VenderOrderStatusResource::collection($orderData),
+            'message' => $message,
+        ];
+        return response()->json($response, 200);
+    }
+
+    public function venderOrdersReadyForDelivery(Request $request){
+
+        $user_id = auth('sanctum')->user()->id;
+      //  $user_id=23;
+
+        //return $user_id;
+
+
+
+        $data= $request->all();
+    
+
+        //return $user_id;
+        $orderData= Order::where('vender_id','=',$user_id)->where('order_status','=',4)->with('menu.default_image')->with('delivery')->with('user')->get();
+       /* $orderData= Order::where('vender_id','=',$user_id)->where(function ($query) {
+            $query->where('order_status', '=', 2)
+                  ->orWhere('order_status', '=', 3);
+        })->with('menu.default_image')->with('delivery')->with('user')->get();
+*/
+        if(!$orderData){   $success=false;   $get_id = 1; $message='Unknown Error, Plz Contact support'; }
+        else{   $success=true; $get_id = $user_id; $message='Order searched successfully'; }
+        if(count($orderData)>=1){ $success=true; $message='Here is your orders';}else{ $success=false; $message='No ordres found';}
+        $response = [
+            'success' => $success,
+            'data'    => VenderOrderStatusResource::collection($orderData),
+            'message' => $message,
+        ];
+        return response()->json($response, 200);
+    }
+
+
+    public function clientOrderHistory(Request $request){
+        
+    }
+
+    public function venderChangeStatus(Request $request){
+        $user_id = auth('sanctum')->user()->id;
+
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|integer|min:1|max:999999999999',
+            'order_status' => 'required|integer|min:0|max:100',
+            ]);
+
+                if($validator->fails()){
+                    return $this->sendError('Validation Error.', $validator->errors());       
+                }
+
+            $data= $request->all();
+
+            $updateItem = Order::where('id', '=',$data['id'])->where('vender_id', '=',$user_id)->update(['order_status'=> $data['order_status']]);
+        
+            if(!$updateItem){   $success=false;   $get_id = 1; $message='Unknown Error, Plz Contact support'; }
+            else{   $success=true; $get_id = $data['id']; $message='Order status changed successfully'; }
+
+            $response = [
+                'success' => $success,
+                'data'    => $get_id,
+                'message' => $message,
+            ];
+            return response()->json($response, 200);
+    }
+
+
+    public function sendError($error, $errorMessages = [], $code = 404) {
+        $response = [
+            'success' => false,
+            'message' => $error,
+        ];
+
+        if(!empty($errorMessages)){
+            $response['data'] = $errorMessages;
+        }
+
+        return response()->json($response, $code);
+    }
+
+    
 }

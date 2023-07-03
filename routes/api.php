@@ -77,10 +77,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/client-order-pending', [OrderController::class,'clientPending'])->name('client-order-panding');
     Route::post('/client-order-histroy', [OrderController::class,'clientOrderHistory'])->name('client-order-history');
 
+    Route::post('/vender-order-records', [OrderController::class,'venderOrdersStatus'])->name('vender-order-status');
+    Route::post('/vender-order-running', [OrderController::class,'venderOrdersRunning'])->name('vender-order-status');
+    Route::post('/vender-order-ready-to-deliver', [OrderController::class,'venderOrdersReadyForDelivery'])->name('vender-order-ready-for-delivery');
+    
+    Route::post('/vender-order-status-change', [OrderController::class,'venderChangeStatus'])->name('vender-order-status-change');
 
+    
 
-
-
+    
     
 
    // Route::get('/staus-message', [StatusFillsController::class, 'status']);
