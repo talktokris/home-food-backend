@@ -42,7 +42,7 @@ class User extends Authenticatable
     }
 
     public function address(){
-        return $this->hasOne(Food_menu_image::class, 'id', 'address_id');
+        return $this->hasOne(User_address_list::class, 'id', 'address_id');
     }
     public function address_list(){
         return $this->hasMany(User_address_list::class, 'user_id', 'id');

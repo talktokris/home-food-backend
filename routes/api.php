@@ -68,7 +68,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/client-address-edit', [AddressController::class,'edit'])->name('client-address-edit');
     Route::post('/client-address-delete', [AddressController::class,'delete'])->name('client-address-delete');
     Route::post('/client-address-setdefault', [AddressController::class,'setDefault'])->name('client-address-default');
-
+    Route::post('/vender-address-setup', [AddressController::class,'venderAddressSetup'])->name('vender-address-setup');
+   
+    
     Route::post('/client-profile-update', [CustomerController::class,'profileUpdate'])->name('client-profile-update');
     Route::post('/client-change-password', [CustomerController::class,'passwordChange'])->name('client-change-password');
     Route::post('/client-set-search-radius', [CustomerController::class,'radiusUpdate'])->name('client-set-search-radius');
@@ -80,6 +82,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/vender-order-records', [OrderController::class,'venderOrdersStatus'])->name('vender-order-status');
     Route::post('/vender-order-running', [OrderController::class,'venderOrdersRunning'])->name('vender-order-status');
     Route::post('/vender-order-ready-to-deliver', [OrderController::class,'venderOrdersReadyForDelivery'])->name('vender-order-ready-for-delivery');
+    Route::post('/vender-order-complited-history', [OrderController::class,'venderOrdersComplitedHistory'])->name('vender-order-history');
+   
     
     Route::post('/vender-order-status-change', [OrderController::class,'venderChangeStatus'])->name('vender-order-status-change');
 

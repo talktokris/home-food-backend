@@ -305,6 +305,30 @@ class OrderController extends Controller
     }
 
 
+
+    public function venderOrdersComplitedHistory(Request $request){
+
+        $user_id = auth('sanctum')->user()->id;
+
+        $data= $request->all();
+    
+
+        $orderData= Order::where('vender_id','=',$user_id)->where('order_status','>',4)->with('menu.default_image')->with('delivery')->with('user')->get();
+
+        if(!$orderData){   $success=false;   $get_id = 1; $message='Unknown Error, Plz Contact support'; }
+        else{   $success=true; $get_id = $user_id; $message='Order searched successfully'; }
+        if(count($orderData)>=1){ $success=true; $message='Here is your orders';}else{ $success=false; $message='No ordres found';}
+        $response = [
+            'success' => $success,
+            'data'    => VenderOrderStatusResource::collection($orderData),
+            'message' => $message,
+        ];
+        return response()->json($response, 200);
+    }
+
+
+
+
     public function clientOrderHistory(Request $request){
         
     }
