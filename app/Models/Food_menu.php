@@ -28,8 +28,25 @@ class Food_menu extends Model
         return $this->hasMany(Food_menu_image::class, 'food_menu_id', 'id');
     }
 
+
+
     public function default_image(){
         return $this->hasOne(Food_menu_image::class, 'id', 'menu_profile_img_id');
     }
-    
+
+
+
+    public function venderInfo(){
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+
+    public function topCommnets(){
+        return $this->hasMany(Food_comment::class, 'vender_id', 'user_id');
+    }
+
+    public function arguments(){
+        return $this->hasMany(Food_menu_argument_heading::class, 'food_menu_id', 'id');
+    }
+
 }

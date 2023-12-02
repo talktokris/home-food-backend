@@ -6,16 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\StatusMsgResource;
-use App\Models\Users_role;
-use App\Models\Active_status_list;
-use App\Models\Veg_status_list;
-use App\Models\Comment_status_list;
-use App\Models\Delivery_status_list;
-use App\Models\Delivery_type_list;
-use App\Models\Fetch_status_list;
-use App\Models\Order_status_list;
-use App\Models\Payment_status_list;
-use App\Models\Payment_type_list;
+
+use App\Models\Select_list_option;
 
 class StatusFillsController extends Controller
 {
@@ -23,15 +15,16 @@ class StatusFillsController extends Controller
 
     public function status(){
 
-        $active_status = Active_status_list::where('status','=',1)->get();
-        $veg_status = Veg_status_list::where('status','=',1)->get();
-        $comment_status = Comment_status_list::where('status','=',1)->get();
-        $deliver_status = Delivery_status_list::where('status','=',1)->get();
-        $deliver_type = Delivery_type_list::where('status','=',1)->get();
-        $fetch_status = Fetch_status_list::where('status','=',1)->get();
-        $order_status = Order_status_list::where('status','=',1)->get();
-        $payment_status = Payment_status_list::where('status','=',1)->get();
-        $payment_type = Payment_type_list::where('status','=',1)->get();
+        $active_status = Select_list_option::where('options_name','=','active_status_lists')->get();
+        $veg_status = Select_list_option::where('options_name','=','veg_status_lists')->get();
+        $comment_status = Select_list_option::where('options_name','=','comment_status_lists')->get();
+        $deliver_status = Select_list_option::where('options_name','=','delivery_status_lists')->get();
+        $deliver_type = Select_list_option::where('options_name','=','delivery_type_lists')->get();
+        $fetch_status = Select_list_option::where('options_name','=','fetch_status_lists')->get();
+        $halal_status = Select_list_option::where('options_name','=','halal_status_lists')->get();
+        $order_status = Select_list_option::where('options_name','=','order_status_lists')->get();
+        $payment_status = Select_list_option::where('options_name','=','payment_status_lists')->get();
+        $payment_type = Select_list_option::where('options_name','=','payment_type_lists')->get();
 
 
 
@@ -43,6 +36,7 @@ class StatusFillsController extends Controller
             'deliver_status' => StatusMsgResource::collection($deliver_status),
             'deliver_type' => StatusMsgResource::collection($deliver_type),
             'fetch_status' => StatusMsgResource::collection($fetch_status),
+            'halal_status' => StatusMsgResource::collection($halal_status),
             'order_status' => StatusMsgResource::collection($order_status),
             'payment_status' => StatusMsgResource::collection($payment_status),
             'payment_type' => StatusMsgResource::collection($payment_type),

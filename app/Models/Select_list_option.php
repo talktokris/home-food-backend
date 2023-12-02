@@ -5,12 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Active_status_list extends Model
+class Select_list_option extends Model
 {
     use HasFactory;
 
+
     protected $fillable = [
-        'lebel',
-        'status',   
+        'options_name',
+        'sting_value',
+        'integer_value',
+        'status',
+       
     ];
 }

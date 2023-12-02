@@ -101,9 +101,9 @@ use App\Http\Resources\FoodMenuResource;
 
     public function delete(Request $request){
 
-    $user_id = auth('sanctum')->user()->id;
+        $user_id = auth('sanctum')->user()->id;
 
-    $validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
         'id' => 'required|integer|min:1|max:999999999999',
         ]);
 
@@ -358,6 +358,7 @@ use App\Http\Resources\FoodMenuResource;
             'success' => true,
             'slides'=>$homeSlides,
             'results' => FoodMenuResource::collection($menuData),
+           // 'results2' => $menuData,
         ];
         return response()->json($response, 200);
     }

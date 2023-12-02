@@ -14,7 +14,15 @@ class Food_comment extends Model
         'vender_id',
         'food_id',
         'comments',
+        'rating',
         'comment_status',
 
     ];
+
+
+
+    public function author(){
+        return $this->hasMany(User::class, 'user_id', 'id');
+    }
+
 }

@@ -5,12 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Delivery_type_list extends Model
+class Food_menu_argument_item extends Model
 {
     use HasFactory;
 
+
     protected $fillable = [
-        'lebel',
-        'status',   
+        'food_menu_id',
+        'heading_id',
+        'description',
+        'price',
+        'status',
     ];
 }

@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Models\User;
 use App\Http\Resources\VenderOrderStatusResource;
+use App\Http\Resources\CustomerPendingOrderResource;
+
 
 
 
@@ -334,6 +336,7 @@ class OrderController extends Controller
     }
 
     public function venderChangeStatus(Request $request){
+        
         $user_id = auth('sanctum')->user()->id;
 
         $validator = Validator::make($request->all(), [
@@ -351,6 +354,25 @@ class OrderController extends Controller
         
             if(!$updateItem){   $success=false;   $get_id = 1; $message='Unknown Error, Plz Contact support'; }
             else{   $success=true; $get_id = $data['id']; $message='Order status changed successfully'; }
+
+
+
+            $findSalesId = Order::where('id','=',$data['id'])->get();
+            $sales_id = $findSalesId[0]->sales_id;  // fatching the sales id of order
+
+            $TotalOrderCount= Order::where('sales_id','=',$sales_id)->get()->count();
+     
+            $TotalDeliverCount= Order::where('order_status','=',$data['order_status'])->where('sales_id','=',$sales_id)->get()->count();
+            if($TotalDeliverCount == $TotalOrderCount){
+
+                $updateSales = Sale::where('id', '=',$sales_id)->update(['deliver_status'=> $data['order_status'],  'payment_status'=> 2]);
+
+                if(!$updateItem){   $success=false;   $get_id = 1; $message='Unknown Error, Plz Contact support'; }
+                else{   $success=true; $get_id = $data['id']; $message='Order status changed successfully'; }
+    
+          
+            }
+            
 
             $response = [
                 'success' => $success,

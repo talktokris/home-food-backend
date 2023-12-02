@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class StatusMsgResource extends JsonResource
+class FoodMenuArguments extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,13 +14,6 @@ class StatusMsgResource extends JsonResource
      */
     public function toArray($request)
     {
-       // return parent::toArray($request);
-
-        return [
-            'id'=>$this->id,
-            "options_name"=>$this->options_name,
-            "title"=>$this->sting_value,
-            "integer_value"=>$this->integer_value,
-        ];
+        return parent::toArray($request);
     }
 }

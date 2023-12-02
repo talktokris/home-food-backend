@@ -20,6 +20,7 @@ class Sale extends Model
         'payment_type',
         'payment_status',
         'payment_id',
+        'deliver_status',
         'status',
     ];
 
@@ -27,5 +28,11 @@ class Sale extends Model
     public function orders(){
         return $this->hasMany(Order::class, 'sales_id', 'id');
     }
+
+    public function users(){
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+
 
 }

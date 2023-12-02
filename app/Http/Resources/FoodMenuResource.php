@@ -19,6 +19,7 @@ class FoodMenuResource extends JsonResource
         return [
             'id'=>$this->id,
             'user_id'=>$this->user_id,
+            'vender'=>$this->venderInfos($this->venderInfo),
             'food_title'=>$this->food_title,
             'food_description'=>$this->food_description,
             'veg_status'=>$this->veg_status,
@@ -27,9 +28,100 @@ class FoodMenuResource extends JsonResource
             'discount_per'=>$this->discount_per,
             'menu_profile_img_id'=>$this->menu_profile_img_id,
             'active_status'=>$this->active_status,
-            'default_image'=> new  FoodMenuImageResource($this->default_image),
-            'images'=> new  FoodMenuImageResource($this->images),
+            'default_image'=>  $this->imagesSingle($this->default_image),
+          //  'default_image'=> new  FoodMenuImageResource($this->default_image),
+            // 'images'=> new  FoodMenuImageResource($this->images),
+           'images'=> $this->imagesMultiple($this->images),
+            'topCommnets'=>$this->comments($this->topCommnets),
+            'arguments'=>$this->argumentInfo($this->arguments),
 
         ];
+
+
+
+
     }
+                
+                
+                
+
+    public function argumentItems($data){
+        $dataArray =[];
+            foreach($data as $item){
+                array_push($dataArray,  [
+                    'id'=>$item->id,
+                    "description"=>$item->description,
+                    "price"=>$item->price,
+                    ]
+                );
+            }
+
+        return $dataArray;
+    }
+
+    public function argumentInfo($data){
+        $dataArray =[];
+            foreach($data as $item){
+                array_push($dataArray,  [
+                    'id'=>$item->id,
+                    "food_menu_id"=>$item->food_menu_id,
+                    "title"=>$item->title,
+                    "pick_type"=>$item->pick_type,
+                    "data"=>$item->pick_type,
+                    "list"=>$this->argumentItems($item->argumentList),
+                    ]
+                );
+            }
+
+        return $dataArray;
+    }
+
+    public function comments($data){
+        $dataArray =[];
+            foreach($data as $item){
+                array_push($dataArray,  [
+                    'id'=>$item->id,
+                    'user_id'=>$item->user_id,
+                    'rating'=>$item->rating,
+                    "comments"=>$item->comments,
+                    ]
+                );
+            }
+
+        return $dataArray;
+    }
+
+    public function imagesMultiple($data){
+        $imagesList =[];
+            foreach($data as $item){
+                array_push($imagesList,  [
+                    'id'=>$item->id,
+                    "image_name"=>$item->image_name,
+                    ]
+                );
+            }
+
+        return $imagesList;
+    }
+
+    public function imagesSingle($data){
+        return [
+            'id'=>$data->id,
+            "image_name"=>$data->image_name,
+        ];
+    }
+
+
+
+    public function venderInfos($data){
+        return [
+            'id'=>$data->id,
+            "name"=>$data->name,
+            "first_name"=>$data->first_name,
+            "last_name"=>$data->last_name,
+            "banner_image"=>$data->banner_image,
+        ];
+    }
+
+
 }
