@@ -47,6 +47,13 @@ class Order extends Model
     public function menu(){
         return $this->hasOne(Food_menu::class, 'id', 'menu_id');
     }
+    public function allStatus(){
+       // protected $strSlug=;
+        return $this->hasOne(Select_list_option::class, 'integer_value', 'order_status')->where('options_name','=', 'order_status_lists');
+    }
+    // public function wordStatus() {
+    //     return $this->allStatus()->where('options_name','=', 'order_status_lists');
+    // }
     public function delivery(){
         return $this->hasOne(User_address_list::class, 'id', 'delivery_address_id');
     }

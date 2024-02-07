@@ -11,6 +11,7 @@ class Food_comment extends Model
 
     protected $fillable = [
         'user_id',
+        'author_name',
         'vender_id',
         'food_id',
         'comments',
@@ -21,8 +22,13 @@ class Food_comment extends Model
 
 
 
+    // public function authors(){
+    //     return $this->hasOne(User::class, 'id', 'user_id');
+    // }
+
+
     public function author(){
-        return $this->hasMany(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 'id', 'user_id');
     }
 
 }

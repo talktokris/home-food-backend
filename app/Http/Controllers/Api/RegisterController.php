@@ -68,29 +68,36 @@ class RegisterController extends BaseController
          /*========== Vender Otp Login & Register =============*/
  
          public function venderOtpRequest(Request $request) {
-             $validator = Validator::make($request->all(), [
-                 'country_id' => 'required|numeric|min:1|digits_between: 1,999',
-                 'mobile_no' => 'required|numeric|min:1|digits_between: 1,99999999999',
-               
-             ]);
+            $validator = Validator::make($request->all(), [
+                'country_id' => 'required|numeric|min:1|digits_between: 1,999',
+                'mobile_no' => 'required|numeric|min:1|digits_between: 1,99999999999',
+              
+            ]);
         
              if($validator->fails()){
                  return $this->sendError('Validation Error.', $validator->errors());       
              }
-        
+             
              $input = $request->all();
+
              $findNumber =User::where([['mobile_no','=', $input['mobile_no']],['country_id','=', $input['country_id']]])->count(); 
-            // return $findNumber;
- 
+
+             $findNumberStatus =User::where([['mobile_no','=', $input['mobile_no']],['country_id','=', $input['country_id']],['role_id','!=',2]])->count(); 
+            
+             // return $findNumber;
+  
             $genOtp = $this->optGenrate(); // genrate new otp
  
-            if($findNumber>0){
- 
-             $user = User::where('country_id', $input['country_id'])
-             ->where('mobile_no', $input['mobile_no'])
-             ->update(['otp' => $genOtp]);
-             return $this->sendResponse($user, 'Otp Requested successfully.');
- 
+            if($findNumber>=1){
+
+                if($findNumberStatus>=1){
+                    return $this->sendResponse([], 'This number in use as client account.', false);
+                }else {
+                    $user = User::where('country_id', $input['country_id'])
+                    ->where('mobile_no', $input['mobile_no'])
+                    ->update(['otp' => $genOtp]);
+                    return $this->sendResponse($user, 'Otp requested successfully.');
+                }
             } 
             else 
             {
@@ -98,7 +105,7 @@ class RegisterController extends BaseController
              $input['app_margin_per'] = $this->getMarginPer();
              $input['otp'] = $genOtp;
              $user = User::create($input);
-             return $this->sendResponse($user, 'Otp Requested successfully.');
+             return $this->sendResponse($user, 'Account created and otp requested successfully.');
             }
         
             
@@ -134,7 +141,7 @@ class RegisterController extends BaseController
                  return $this->sendResponse($success, 'User login successfully.');
              } 
              else{ 
-                 return $this->sendError('Unauthorised.', ['error'=>'Incorrect OTP']);
+                 return $this->sendError('Invalid OTP code.', ['error'=>'Incorrect otp code']);
              } 
  
             
@@ -338,18 +345,27 @@ class RegisterController extends BaseController
         return $this->sendError('Validation Error.', $validator->errors());       
     }
 
+
     $input = $request->all();
     $findNumber =User::where([['mobile_no','=', $input['mobile_no']],['country_id','=', $input['country_id']]])->count(); 
+
+    $findNumberStatus =User::where([['mobile_no','=', $input['mobile_no']],['country_id','=', $input['country_id']],['role_id','!=',1]])->count(); 
+
    // return $findNumber;
 
    $genOtp = $this->optGenrate(); // genrate new otp
 
-   if($findNumber>0){
+   if($findNumber>=1){
 
-    $user = User::where('country_id', $input['country_id'])
-    ->where('mobile_no', $input['mobile_no'])
-    ->update(['otp' => $genOtp]);
-    return $this->sendResponse($user, 'Otp Requested successfully.');
+        if($findNumberStatus>=1){
+            return $this->sendResponse([], 'This number in use as service provider account.', false);
+        }else {
+            $user = User::where('country_id', $input['country_id'])
+            ->where('mobile_no', $input['mobile_no'])
+            ->update(['otp' => $genOtp]);
+            return $this->sendResponse($user, 'Otp requested successfully.');
+        }
+
 
    } 
    else 
@@ -358,7 +374,7 @@ class RegisterController extends BaseController
     $input['app_margin_per'] = 0;
     $input['otp'] = $genOtp;
     $user = User::create($input);
-    return $this->sendResponse($user, 'Otp Requested successfully.');
+    return $this->sendResponse($user, 'Account created and otp requested successfully.');
    }
 
    
@@ -394,7 +410,7 @@ public function clientOtpLogin(Request $request)
         return $this->sendResponse($success, 'User login successfully.');
     } 
     else{ 
-        return $this->sendError('Unauthorised.', ['error'=>'Incorrect OTP']);
+        return $this->sendError('Invalid OTP code.', ['error'=>'Incorrect otp code']);
     } 
 
    

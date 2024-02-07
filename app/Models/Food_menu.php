@@ -13,12 +13,18 @@ class Food_menu extends Model
         'user_id',
         'food_title',
         'food_description',
+        'food_category',
+        'food_category_id',
+        'image_name',
         'veg_status',
+        'halal_status',
+        'rating',
         'vender_price',
         'customer_price ',
         'discount_per',
         'menu_profile_img_id',
         'active_status',
+        'delete_status',
     ];
     
 
@@ -32,6 +38,13 @@ class Food_menu extends Model
 
     public function default_image(){
         return $this->hasOne(Food_menu_image::class, 'id', 'menu_profile_img_id');
+    }
+    public function head(){
+        return $this->hasMany(Food_menu_argument_heading::class, 'food_menu_id', 'id');
+    }
+
+    public function extra(){
+        return $this->hasMany(Orders_menu_arrgument::class, 'menu_id', 'id');
     }
 
 

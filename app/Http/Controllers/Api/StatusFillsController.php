@@ -25,6 +25,8 @@ class StatusFillsController extends Controller
         $order_status = Select_list_option::where('options_name','=','order_status_lists')->get();
         $payment_status = Select_list_option::where('options_name','=','payment_status_lists')->get();
         $payment_type = Select_list_option::where('options_name','=','payment_type_lists')->get();
+        $food_category = Select_list_option::where('options_name','=','food_category_lists')->get();
+        $pick_type = Select_list_option::where('options_name','=','extra_pick_type')->get();
 
 
 
@@ -40,6 +42,8 @@ class StatusFillsController extends Controller
             'order_status' => StatusMsgResource::collection($order_status),
             'payment_status' => StatusMsgResource::collection($payment_status),
             'payment_type' => StatusMsgResource::collection($payment_type),
+            'food_category'=>StatusMsgResource::collection($food_category),
+            'pick_type'=>StatusMsgResource::collection($pick_type),
         ];
 
     }

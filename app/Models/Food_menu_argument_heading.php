@@ -14,6 +14,7 @@ class Food_menu_argument_heading extends Model
         'title',
         'pick_type',
         'status',
+        'delete_status',
     ];
 
 

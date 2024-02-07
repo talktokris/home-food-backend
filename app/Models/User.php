@@ -19,6 +19,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'location_lebel',
         'first_name',
         'last_name',
         'email',
@@ -31,6 +32,10 @@ class User extends Authenticatable
         'app_margin_per',
         'country_id',
         'mobile_no',
+        'banner_image',
+        'altitude',
+        'latitude',
+        'rating',
     ];
 
     public function country(){
@@ -47,6 +52,15 @@ class User extends Authenticatable
     public function address_list(){
         return $this->hasMany(User_address_list::class, 'user_id', 'id');
     }
+
+    public function reviews(){
+        return $this->hasMany(Food_comment::class, 'vender_id', 'id');
+    }
+
+    public function author(){
+        return $this->belongsTo(Food_comment::class, 'user_id', 'id');
+    }
+
 
 
 
