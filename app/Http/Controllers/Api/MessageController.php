@@ -51,4 +51,32 @@ class MessageController extends Controller
         return response()->json($response, 200);
         
     }
+
+
+    public function orderMsgSave( array $messageArray){
+        
+        $saveMessage = false;
+        
+        foreach($messageArray as ['to_id' => $msg_to_user, 'title' => $msg_title, 'message' => $msg_text]){
+
+            // list($msg_to_user, $b, $c) = $item;
+            
+            $saveMessage = new Message;
+            $saveMessage->user_id = $msg_to_user;
+            $saveMessage->title = $msg_title;
+            $saveMessage->message = $msg_text;
+            $saveMessage->read_status = 0;
+            $saveMessage->status=1;
+            $saveMessage->save();
+    
+            if(!$saveMessage){   $msgSave=false;  } else{   $msgSave=true;  }
+        }
+        return $saveMessage;
+
+        
+    }
+
+             
+
+
 }

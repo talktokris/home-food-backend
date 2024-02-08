@@ -34,6 +34,10 @@ class Food_menu extends Model
         return $this->hasMany(Food_menu_image::class, 'food_menu_id', 'id');
     }
 
+    public function halal_status_string(){
+        // protected $strSlug=;
+         return $this->hasOne(Select_list_option::class, 'integer_value', 'halal_status')->where('options_name','=', 'halal_status_lists');
+     }
 
 
     public function default_image(){

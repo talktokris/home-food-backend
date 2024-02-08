@@ -11,6 +11,8 @@ use App\Models\Food_menu;
 use App\Models\Food_menu_argument_item;
 use App\Models\Orders_menu_arrgument;
 use App\Models\Food_delivery_list;
+use App\Models\Select_list_option;
+use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Models\User;
@@ -18,6 +20,7 @@ use App\Http\Resources\VenderOrderStatusResource;
 use App\Http\Resources\CustomerPendingOrderResource;
 use App\Http\Resources\SalesOrderResource;
 use App\Http\Resources\SalesOrderClientResource;
+use App\Http\Controllers\Api\MessageController;
 
 
 
@@ -50,48 +53,48 @@ class OrderController extends Controller
 
       $data= $request->all();
        // return  $data;
-/*
-       $testData = {
-        "user_id": 4,
-        "orders": {
-          "userId": 4,
-          "venderId": 32,
-          "totalItems": 2,
-          "totalPrice": 24,
-          "deliverFee": 5,
-          "deliveryAddress": {
-            "id": 5,
-            "user_id": 25,
-            "address": "sadfsadf4 7",
-            "street": "asdfsadfa 7",
-            "city_name": "Kuala Lumpur 7",
-            "state": "Malacca",
-            "postal_code": 234347,
-            "default_status": 1,
-            "status": 1,
-            "created_at": "2023-06-27T13:42:43.000000Z",
-            "updated_at": "2023-06-28T05:57:51.000000Z"
-          },
-          "paymentType": 1,
-          "paymentStatus": 0,
-          "paymentId": 0,
-          "orders": [
-            {
-              "foodId": 59,
-              "extra": []
-            },
-            {
-              "foodId": 58,
-              "extra": []
-            }
-          ]
-        },
-        "payment_options": 1,
-        "delivery_address": 5
-    };
-            
-    
-*/     
+            /*
+                $testData = {
+                    "user_id": 4,
+                    "orders": {
+                    "userId": 4,
+                    "venderId": 32,
+                    "totalItems": 2,
+                    "totalPrice": 24,
+                    "deliverFee": 5,
+                    "deliveryAddress": {
+                        "id": 5,
+                        "user_id": 25,
+                        "address": "sadfsadf4 7",
+                        "street": "asdfsadfa 7",
+                        "city_name": "Kuala Lumpur 7",
+                        "state": "Malacca",
+                        "postal_code": 234347,
+                        "default_status": 1,
+                        "status": 1,
+                        "created_at": "2023-06-27T13:42:43.000000Z",
+                        "updated_at": "2023-06-28T05:57:51.000000Z"
+                    },
+                    "paymentType": 1,
+                    "paymentStatus": 0,
+                    "paymentId": 0,
+                    "orders": [
+                        {
+                        "foodId": 59,
+                        "extra": []
+                        },
+                        {
+                        "foodId": 58,
+                        "extra": []
+                        }
+                    ]
+                    },
+                    "payment_options": 1,
+                    "delivery_address": 5
+                };
+                        
+                
+            */     
         $client_id = $data['user_id'];
         $payment_options = $data['payment_options'];
         $delivery_address = $data['delivery_address'];
@@ -163,6 +166,30 @@ class OrderController extends Controller
               // return $delivery_address;
                 $saveDelivary = $this->saveDelivery($sales_id, $delivery_address);
              //  return "Saved Delivery :".$sales_id.'--'.$saveDelivary."</br>";
+
+
+                // Sending Message to user and vender start
+                $statusMsg = Select_list_option::where('options_name', '=','order_status_lists')->where('integer_value', '=', $pre_order_status)->get()->first();
+                // return $salesInfo->user_id;
+                $statusSting =  $statusMsg->sting_value;
+    
+                $client_id = $user_id;
+                $clinet_title = 'Your order no : ' .$sales_id .' has placed successfully.';
+                $client_message = 'Dear user, Your order is placed successfully. Your order no is :  '.$sales_id .'. You will be informed about the process update.';
+    
+                $vender_id = $venderId;
+                $vender_title = 'Your have new pending order no : '.$sales_id .'. Please accept to proceed it.';
+                $vender_message = 'Dear user, Your have new pending order no :  '.$sales_id .'. Please accept to proceed it.' ;
+    
+                $messageArray = [
+                                ['to_id'=>$client_id, 'title'=>$clinet_title, 'message'=>$client_message ],
+                                ['to_id'=>$vender_id, 'title'=>$vender_title, 'message'=>$vender_message]
+                            ];
+    
+                $msg = new  MessageController;
+                $msg->orderMsgSave($messageArray);
+                // Sending Message to user and vender end
+
             
             }
 
@@ -300,15 +327,15 @@ class OrderController extends Controller
     public function clientPending(Request $request){
 
         $user_id = auth('sanctum')->user()->id;
-         $user_id=25;
+          $user_id=25;
 
-        //return $user_id;
+        // return $user_id;
       //  $orderData= Order::where('user_id','=',$user_id)->where('order_status','!=',6)->with('menu.extra')->with('vender')->get();
 
       
         // $orderData= Sale::where('user_id','=',$user_id)->where('deliver_status','=',0)->with('vender')->with('orders.menu.extra.extraInfo')->get();
         $orderData= Sale::where('user_id','=',$user_id)->where('deliver_status','=',0)->with('vender')->with('orders.menu.extra.extraInfo.heading')->orderBy('id', 'DESC')->get();
-      //  return $orderData;
+        // return $orderData;
 
      //   $orderData= Sale::where('user_id','=',$user_id)->where('deliver_status','==',0)->with('menu.extra')->with('vender')->get();
 
@@ -452,7 +479,7 @@ class OrderController extends Controller
     public function venderChangeStatus(Request $request){
         
         $user_id = auth('sanctum')->user()->id;
-    //  $user_id = 23;
+        //  $user_id = 23;
    
         $validator = Validator::make($request->all(), [
             'id' => 'required|integer|min:1|max:999999999999',
@@ -480,6 +507,34 @@ class OrderController extends Controller
                 ];
                 return response()->json($response, 200);
             }
+
+            // Send Message Start 
+            
+            $orderInfo = Order:: where('id', '=', $data['id'])->with('menu')->get()->first();
+            $itemName = $orderInfo->menu->food_title;
+            $salesInfo = Sale:: where('id', '=', $data['sales_id'])->get()->first();
+            $statusMsg = Select_list_option::where('options_name', '=','order_status_lists')->where('integer_value', '=', $data['order_status'])->get()->first();
+            // return $salesInfo->user_id;
+            $statusSting =  $statusMsg->sting_value;
+
+            $client_id = $salesInfo->user_id;
+            $clinet_title = $itemName.' of order no : '.$data['sales_id'] .' is ' . $statusSting ;
+            $client_message = 'Dear User, your order no : '.$data['sales_id'] .' status is changed to ' .$statusSting ;
+
+            $vender_id = $salesInfo->vender_id;
+            $vender_title = $itemName.' of order no : '.$data['sales_id'] .' is ' . $statusSting ;
+            $vender_message = 'Dear Vender, '. $itemName.' of order no : '.$data['sales_id'] .' status is changed to ' .$statusSting ;
+
+            $messageArray = [
+                            ['to_id'=>$client_id, 'title'=>$clinet_title, 'message'=>$client_message ],
+                            ['to_id'=>$vender_id, 'title'=>$vender_title, 'message'=>$vender_message]
+                        ];
+            // return $messageArray;
+
+            $msg = new  MessageController;
+            $msg->orderMsgSave($messageArray);
+
+            // Send Message End 
        
 
             $updateItem = Order::where('id', '=',$data['id'])->where('vender_id', '=',$user_id)->update(['order_status'=> $data['order_status']]);
@@ -516,6 +571,7 @@ class OrderController extends Controller
     public function venderSalesStatus(Request $request){
         
         $user_id = auth('sanctum')->user()->id;
+        $user_id=23;
 
 
 
@@ -545,7 +601,30 @@ class OrderController extends Controller
 
             $updateSalesStatus = Sale::where('id', '=',$data['sales_id'])->where('vender_id', '=',$user_id)->update(['order_status'=> $data['status_value']]);
 
-            // return $updateSalesStatus;
+            // Send Message Start 
+            
+            $salesInfo = Sale:: where('id', '=', $data['sales_id'])->get()->first();
+            $statusMsg = Select_list_option::where('options_name', '=','order_status_lists')->where('integer_value', '=', $data['status_value'])->get()->first();
+            // return $salesInfo->user_id;
+            $statusSting =  $statusMsg->sting_value;
+
+            $client_id = $salesInfo->user_id;
+            $clinet_title = 'Order no : '.$data['sales_id'] .' status is changed to ' . $statusSting ;
+            $client_message = 'Dear User, Your order no : '.$data['sales_id'] .' status is changed to ' .$statusSting ;
+
+            $vender_id = $salesInfo->vender_id;
+            $vender_title ='Order no : '.$data['sales_id'] .' status is changed to ' . $statusSting ;
+            $vender_message = 'Dear Vender,  Your order no : '.$data['sales_id'] .' status is changed to ' .$statusSting ;
+
+            $messageArray = [
+                            ['to_id'=>$client_id, 'title'=>$clinet_title, 'message'=>$client_message ],
+                            ['to_id'=>$vender_id, 'title'=>$vender_title, 'message'=>$vender_message]
+                        ];
+
+            $msg = new  MessageController;
+            $msg->orderMsgSave($messageArray);
+
+            // Send Message End 
 
         if($updateSalesStatus){
 

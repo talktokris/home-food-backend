@@ -79,8 +79,8 @@ class SalesOrderResource extends JsonResource
                 "discount"=>$item->discount,
                 "title"=>$item->extraInfo->description,
                 "price"=>$item->extraInfo->price,
-                // "heading"=>$item->extraInfo->heading->title,
-                "heading"=>$item->extraInfo->heading,
+                "heading"=>$item->extraInfo->heading->title,
+                // "heading"=>$item->extraInfo->heading,
              //   "extraInfo"=>$this->extraInfo($item->extraInfo),
                 ]
             );
@@ -112,6 +112,7 @@ class SalesOrderResource extends JsonResource
             'id'=>$data->id,
             "food_title"=>$data->food_title,
             "food_description"=>$data->food_description,
+            'food_category'=>$data->food_category,
             "image_name"=>$data->image_name,
             "veg_status"=>$data->veg_status,
             "halal_status"=>$data->halal_status,

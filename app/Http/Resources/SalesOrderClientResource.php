@@ -83,8 +83,8 @@ class SalesOrderClientResource extends JsonResource
 
                 "title"=>$item->extraInfo->description,
                 "price"=>$item->extraInfo->price,
-                 "heading"=>$item->extraInfo->heading,
-                // "heading"=>$item->extraInfo->heading->title,
+                //  "heading"=>$item->extraInfo->heading,
+                "heading"=>$item->extraInfo->heading->title,
 
                 // "heading"=>$heading,
 
@@ -122,9 +122,11 @@ class SalesOrderClientResource extends JsonResource
             'id'=>$data->id,
             "food_title"=>$data->food_title,
             "food_description"=>$data->food_description,
+            'food_category'=>$data->food_category,
             "image_name"=>$data->image_name,
             "veg_status"=>$data->veg_status,
             "halal_status"=>$data->halal_status,
+            "halal_status_string"=>$data->halal_status_string,
             "customer_price"=>$data->customer_price,
             "discount_per"=>$data->discount_per,
            //  "extra"=>$data->extra,

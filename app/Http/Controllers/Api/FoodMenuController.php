@@ -692,9 +692,11 @@ use App\Http\Resources\SalesOrderResource;
     }
 
 
-    public function clientFetchVenderMenu(Request $request){
+    public function venderFetchSingleMenu(Request $request){
 
         $user_id = auth('sanctum')->user()->id;
+
+        // return $user_id;
 
         $validator = Validator::make($request->all(), [
             'id' => 'required|integer|min:1|max:999999999999',
@@ -706,12 +708,53 @@ use App\Http\Resources\SalesOrderResource;
 
         $data= $request->all();
         
-        $menuData = Food_menu::where('user_id', '=', $data['id'])->get();
-        $venderData = User::where('id', '=', $data['id'])->get();
-        // 'results' => UserProfileResource::collection($user_info)
+        $menuData = Food_menu::where('id', '=', $data['id'])->get();
+        $menuData = Food_menu::where('user_id', '=', $user_id)->where('id', '=', $data['id'])->where('delete_status', '=', 0)->get();
+        // return $menuData;
+        // $venderData = User::where('id', '=', $user_id)->get();
+            // 'results' => UserProfileResource::collection($user_info)
 
         $response = [
-            'success' => false,
+            'success' => true,
+            // 'vender'=> MenuVenderResource::collection($venderData),
+            'food'=> FoodMenuResource::collection($menuData),
+            // 'results' => FoodMenuResource::collection($menuData),
+        ];
+        return response()->json($response, 200);
+
+        
+    }
+
+
+    public function clientFetchVenderMenu(Request $request){
+
+        $user_id = auth('sanctum')->user()->id;
+
+        $user_id = 23;
+
+        //  return $user_id;
+
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|integer|min:1|max:999999999999',
+            ]);
+
+            if($validator->fails()){
+                return $this->sendError('Validation Error.', $validator->errors());       
+            }
+
+        $data= $request->all();
+        // return  $data['id'];
+        
+        // $menuData = Food_menu::where('id', '=', $data['id'])->get();
+        // $menuData = Food_menu::where('user_id', '=', $user_id)->where('id', '=', $data['id'])->where('delete_status', '=', 0)->get();
+        $menuData = Food_menu::where('user_id', '=', $user_id)->where('delete_status', '=', 0)->get();
+       
+        // return $menuData;
+        $venderData = User::where('id', '=', $user_id)->get();
+            // 'results' => UserProfileResource::collection($user_info)
+
+        $response = [
+            'success' => true,
             'vender'=> MenuVenderResource::collection($venderData),
             'food'=> FoodMenuResource::collection($menuData),
             // 'results' => FoodMenuResource::collection($menuData),

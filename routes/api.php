@@ -89,11 +89,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/vender-menu-fetch-all', [FoodMenuController::class,'fetchAllItems'])->name('vender-menu-fetch-all');
     Route::post('/vender-menu-informations', [FoodMenuController::class,'fetchVenderInfo'])->name('vender-menu-fetch-info');
-    Route::post('/vender-menu-fetch-single', [FoodMenuController::class,'clientFetchVenderMenu'])->name('vender-menu-fetch-single');
+    Route::post('/vender-menu-fetch-single', [FoodMenuController::class,'venderFetchSingleMenu'])->name('vender-menu-fetch-single');
     
      // Client Api Routes
 
     Route::post('/client-food-search', [FoodMenuController::class,'searchFoods'])->name('client-food-search-all');
+    Route::post('/client-menu-fetch-single', [FoodMenuController::class,'clientFetchVenderMenu'])->name('client-fetch-vender-single');
+
     Route::post('/client-food-home', [FoodMenuController::class,'homeFoods'])->name('client-food-home');
 
 

@@ -33,6 +33,7 @@ class FoodMenuResource extends JsonResource
             'discount_per'=>$this->discount_per,
             'menu_profile_img_id'=>$this->menu_profile_img_id,
             'active_status'=>$this->active_status,
+            
            // 'default_image'=>  $this->imagesSingle($this->default_image),
           //  'default_image'=> new  FoodMenuImageResource($this->default_image),
             // 'images'=> new  FoodMenuImageResource($this->images),

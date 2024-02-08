@@ -12,6 +12,7 @@ class Message extends Model
         'user_id',
         'title',
         'message',
+        'read_status',
         'status'
     
     ];
