@@ -11,6 +11,95 @@ use App\Models\User;
 
 class CustomerController extends Controller
 {
+
+    public function clientProfileUpdate(Request $request){
+
+
+
+        $user_id = auth('sanctum')->user()->id;
+
+
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            
+            ]);
+
+
+
+            if($validator->fails()){
+                return $this->sendError('The email field is required.', $validator->errors());       
+            }
+
+        $data= $request->all();
+        $email_address= $data['email'];
+        
+        $countEmail = User::where('id', $user_id)->where('email', $email_address)->get()->count();
+
+        if($countEmail===0){
+
+
+            $validator = Validator::make($request->all(), [
+                'first_name' => 'required|string|min:2|max:200',
+                'last_name' => 'required|string|min:2|max:200',
+                'email' => 'required|email|unique:users',
+                
+                ]);
+
+                if($validator->fails()){
+                    return $this->sendError('Validation Error.', $validator->errors());       
+                }
+
+
+            $updateItem = User::where('id', '=',$user_id)->update(['first_name'=> $data['first_name'],'last_name'=> $data['last_name'],
+            'email'=> $data['email']]);
+
+          //  return $updateItem;
+
+
+          if(!$updateItem){   $success=false;   $get_id = 1; $message='Unknown Error, Plz Contact support'; }
+          else{   $success=true; $get_id = $user_id; $message='Profile updated successfully'; }
+
+          $response = [
+              'success' => $success,
+              'data'    => $get_id,
+              'message' => $message,
+          ];
+          return response()->json($response, 200);
+
+            }else {
+
+
+
+                $validator = Validator::make($request->all(), [
+                    'first_name' => 'required|string|min:2|max:200',
+                    'last_name' => 'required|string|min:2|max:200',
+                    'email' => 'required|email',
+                    
+                    ]);
+    
+                    if($validator->fails()){
+                        return $this->sendError('Validation Error.', $validator->errors());       
+                    }
+    
+    
+                    $updateItem = User::where('id', '=',$user_id)->update(['first_name'=> $data['first_name'],'last_name'=> $data['last_name'],
+                    'email'=> $data['email']]);
+        
+            if(!$updateItem){   $success=false;   $get_id = 1; $message='Unknown Error, Plz Contact support'; }
+            else{   $success=true; $get_id = $user_id; $message='Profile updated successfully'; }
+
+            $response = [
+                'success' => $success,
+                'data'    => $get_id,
+                'message' => $message,
+            ];
+            return response()->json($response, 200);
+        }
+
+
+    }
+
     public function profileUpdate(Request $request){
 
 

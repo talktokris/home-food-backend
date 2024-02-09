@@ -327,7 +327,7 @@ class OrderController extends Controller
     public function clientPending(Request $request){
 
         $user_id = auth('sanctum')->user()->id;
-          $user_id=25;
+        //   $user_id=25;
 
         // return $user_id;
       //  $orderData= Order::where('user_id','=',$user_id)->where('order_status','!=',6)->with('menu.extra')->with('vender')->get();

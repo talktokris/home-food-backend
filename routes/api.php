@@ -106,7 +106,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/vender-address-setup', [AddressController::class,'venderAddressSetup'])->name('vender-address-setup');
    
     
-    Route::post('/client-profile-update', [CustomerController::class,'profileUpdate'])->name('client-profile-update');
+    Route::post('/client-profile-update', [CustomerController::class,'clientProfileUpdate'])->name('client-profile-update');
     Route::post('/client-change-password', [CustomerController::class,'passwordChange'])->name('client-change-password');
     Route::post('/client-set-search-radius', [CustomerController::class,'radiusUpdate'])->name('client-set-search-radius');
     Route::post('/client-message', [MessageController::class,'clientMessage'])->name('client-messages');

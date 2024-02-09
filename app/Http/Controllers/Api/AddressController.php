@@ -46,6 +46,10 @@ class AddressController extends Controller
         if(!$saveItem){   $success=false;   $get_id = 1; $message='Unknown Error, Plz Contact support'; }
         else{   $success=true; $get_id = $saveItem->id; $message='Address added successfully'; }
 
+
+        $updateItem = User::where('id', '=',$user_id)->update(['address_id'=> $get_id]);
+        if(!$updateItem){   $success_profile=false; }  else{   $success_profile=true; }
+
         $response = [
             'success' => $success,
             'data'    => $get_id,
@@ -159,9 +163,11 @@ class AddressController extends Controller
     public function venderAddressSetup(Request $request){
 
         $user_id = auth('sanctum')->user()->id;
-        $user_id=23;
+        // $user_id=23;
+
 
         $findAddressStaus = User::where('id','=',$user_id)->where('address_id','=',0)->get()->count();
+
 
         if($findAddressStaus===1){  // Insert Address Query
 
@@ -169,10 +175,10 @@ class AddressController extends Controller
 
 
         $validator = Validator::make($request->all(), [
-            'address' => 'required|string|min:5|max:200',
+            'address' => 'required|string|min:2|max:200',
             'street' => 'required|string|min:2|max:200',
             'city_name' => 'required|string|min:2|max:100',
-            'state' => 'required|string|min:3|max:100',
+            'state' => 'required|string|min:2|max:100',
             'postal_code' => 'required|integer|min:0|max:9999999',
 
             
@@ -193,6 +199,9 @@ class AddressController extends Controller
         $saveItem->default_status= 1;
         $saveItem->status= 1;
         $saveItem->save();
+
+        // return $saveItem;
+
 
         if(!$saveItem){   $success=false;   $get_id = 0; $message='Unknown Error, Plz Contact support'; }
         else{   $success=true; $get_id = $saveItem->id; $message='Address added successfully'; }
