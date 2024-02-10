@@ -414,7 +414,7 @@ class OrderController extends Controller
 
       
         // $orderData= Sale::where('user_id','=',$user_id)->where('deliver_status','=',0)->with('vender')->with('orders.menu.extra.extraInfo')->get();
-        $orderData= Sale::where('vender_id','=',$user_id)->where('deliver_status','=',0)->whereBetween('order_status', [0, 3])->where('order_status','=',$order_status)->with('vender')->with('orders.menu.extra.extraInfo')->orderBy('id', 'DESC')->get();
+        $orderData= Sale::where('vender_id','=',$user_id)->where('deliver_status','=',0)->whereBetween('order_status', [2, 4])->with('vender')->with('orders.menu.extra.extraInfo')->orderBy('id', 'DESC')->get();
        // return $orderData;
 
      //   $orderData= Sale::where('user_id','=',$user_id)->where('deliver_status','==',0)->with('menu.extra')->with('vender')->get();
