@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Validator;
+
 use App\Http\Resources\MessageResource;
 
 use App\Models\Message;
@@ -30,6 +33,61 @@ class MessageController extends Controller
         return response()->json($response, 200);
         
     }
+    public function clientMessageReadCount(Request $request){
+        
+        
+        $user_id = auth('sanctum')->user()->id;
+     //  $user_id=222;
+
+        $messageDataCount = Message::where('user_id','=', $user_id)->where('read_status','=', 0)->get()->count();
+
+        $status= true;
+        $message = 'Message fetched successfully';
+
+        
+        $response = [
+            'status' => $status,
+            'data'    => $messageDataCount,
+            'message' => $message,
+        ];
+        return response()->json($response, 200);
+        
+    }
+
+    public function clientMessageReadUpdate(Request $request){
+        
+        
+        $user_id = auth('sanctum')->user()->id;
+
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|integer|min:0|max:9999999',
+            
+            ]);
+
+            if($validator->fails()){
+                return $this->sendError('Validation Error.', $validator->errors());       
+            }
+
+            $data= $request->all();
+            $message_id= $data['id'];
+
+            $updateItem = Message::where('id', '=',$message_id)->update(['read_status'=> 1]);
+
+            if(!$updateItem){   $success=false;   $get_id = $message_id; $message='Unknown Error, Plz Contact support'; }
+            else{   $success=true; $get_id = $message_id; $message='Message Seen successfully'; }
+
+            $response = [
+                'success' => $success,
+                'data'    => $get_id,
+                'message' => $message,
+            ];
+            return response()->json($response, 200);
+        
+    }
+
+ 
+
+
 
     public function venderMessage(Request $request){
         
@@ -37,7 +95,7 @@ class MessageController extends Controller
         $user_id = auth('sanctum')->user()->id;
      //  $user_id=222;
 
-        $messageData = Message::where('user_id','=', $user_id)->orderBy('id', 'DESC')->limit(50)->get();
+        $messageData = Message::where('user_id','=', $user_id)->orderBy('id', 'DESC')->limit(100)->get();
 
         $status= true;
         $message = 'Message fetched successfully';
@@ -50,6 +108,57 @@ class MessageController extends Controller
         ];
         return response()->json($response, 200);
         
+    }
+
+    public function venderMessageReadCount(Request $request){
+        
+        
+        $user_id = auth('sanctum')->user()->id;
+     //  $user_id=222;
+
+        $messageDataCount = Message::where('user_id','=', $user_id)->where('read_status','=', 0)->get()->count();
+
+        $status= true;
+        $message = 'Message fetched successfully';
+
+        
+        $response = [
+            'status' => $status,
+            'data'    => $messageDataCount,
+            'message' => $message,
+        ];
+        return response()->json($response, 200);
+        
+    }
+
+    public function venderMessageReadUpdate(Request $request){
+   
+        $user_id = auth('sanctum')->user()->id;
+
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|integer|min:0|max:9999999',
+            
+            ]);
+
+            if($validator->fails()){
+                return $this->sendError('Validation Error.', $validator->errors());       
+            }
+
+            $data= $request->all();
+            $message_id= $data['id'];
+
+            $updateItem = Message::where('id', '=',$message_id)->update(['read_status'=> 1]);
+
+            if(!$updateItem){   $success=false;   $get_id = $message_id; $message='Unknown Error, Plz Contact support'; }
+            else{   $success=true; $get_id = $message_id; $message='Message Seen successfully'; }
+
+            $response = [
+                'success' => $success,
+                'data'    => $get_id,
+                'message' => $message,
+            ];
+            return response()->json($response, 200);
+
     }
 
 
@@ -74,6 +183,22 @@ class MessageController extends Controller
         return $saveMessage;
 
         
+    }
+
+
+    public function sendError($error, $errorMessages = [], $code = 404) {
+        $response = [
+            'success' => false,
+            'message' => $error,
+        ];
+
+
+        if(!empty($errorMessages)){
+            $response['data'] = $errorMessages;
+        }
+
+
+        return response()->json($response, $code);
     }
 
              

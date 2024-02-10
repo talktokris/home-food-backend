@@ -110,12 +110,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/client-change-password', [CustomerController::class,'passwordChange'])->name('client-change-password');
     Route::post('/client-set-search-radius', [CustomerController::class,'radiusUpdate'])->name('client-set-search-radius');
     Route::post('/client-message', [MessageController::class,'clientMessage'])->name('client-messages');
+    Route::post('/client-message-read-count', [MessageController::class,'clientMessageReadCount'])->name('client-message-read-count');
+    Route::post('/client-message-read-update', [MessageController::class,'clientMessageReadUpdate'])->name('client-message-read-update');
 
 
     Route::post('/vender-profile-update', [VenderController::class,'profileUpdate'])->name('vender-profile-update');
     Route::post('/vender-change-password', [VenderController::class,'passwordChange'])->name('vender-change-password');
     Route::post('/vender-set-search-radius', [VenderController::class,'radiusUpdate'])->name('vender-set-search-radius');
     Route::post('/vender-message', [MessageController::class,'venderMessage'])->name('vender-messages');
+    Route::post('/vender-message-read-count', [MessageController::class,'venderMessageReadCount'])->name('vender-message-read-count');
+    Route::post('/vender-message-read-update', [MessageController::class,'venderMessageReadUpdate'])->name('vender-message-read-update');
+
 
     Route::post('/client-order-store', [OrderController::class,'clientStore'])->name('client-order-store');
     Route::post('/client-order-pending', [OrderController::class,'clientPending'])->name('client-order-panding');
