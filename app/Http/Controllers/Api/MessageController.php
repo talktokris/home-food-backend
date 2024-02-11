@@ -17,9 +17,11 @@ class MessageController extends Controller
 
         
         $user_id = auth('sanctum')->user()->id;
+
+
      //  $user_id=222;
 
-        $messageData = Message::where('user_id','=', $user_id)->orderBy('id', 'DESC')->limit(50)->get();
+        $messageData = Message::where('user_id','=', $user_id)->orderBy('id', 'DESC')->limit(200)->get();
 
         $status= true;
         $message = 'Message fetched successfully';
@@ -39,7 +41,7 @@ class MessageController extends Controller
         $user_id = auth('sanctum')->user()->id;
      //  $user_id=222;
 
-        $messageDataCount = Message::where('user_id','=', $user_id)->where('read_status','=', 0)->get()->count();
+        $messageDataCount = Message::where('user_id','=', $user_id)->where('read_status','=', 0)->orderBy('id', 'DESC')->limit(200)->get()->count();
 
         $status= true;
         $message = 'Message fetched successfully';
@@ -95,7 +97,7 @@ class MessageController extends Controller
         $user_id = auth('sanctum')->user()->id;
      //  $user_id=222;
 
-        $messageData = Message::where('user_id','=', $user_id)->orderBy('id', 'DESC')->limit(100)->get();
+        $messageData = Message::where('user_id','=', $user_id)->orderBy('id', 'DESC')->limit(200)->get();
 
         $status= true;
         $message = 'Message fetched successfully';
@@ -116,7 +118,7 @@ class MessageController extends Controller
         $user_id = auth('sanctum')->user()->id;
      //  $user_id=222;
 
-        $messageDataCount = Message::where('user_id','=', $user_id)->where('read_status','=', 0)->get()->count();
+        $messageDataCount = Message::where('user_id','=', $user_id)->where('read_status','=', 0)->orderBy('id', 'DESC')->limit(200)->get()->count();
 
         $status= true;
         $message = 'Message fetched successfully';
